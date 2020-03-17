@@ -1,0 +1,178 @@
+#include<iostream>
+#include<cstdio>
+struct node{
+    int data;
+    struct node* nextPtr;
+
+};
+typedef struct node Linklist;
+
+Linklist* inputPtr() {
+    int n;
+    struct node* headPtr1,*currentPtr1,*lastPtr1;
+    headPtr1=NULL;
+    currentPtr1=NULL;
+
+
+    scanf("%d",&n);
+    while(n!=-1){
+        currentPtr1=(struct node*)malloc(sizeof(struct node));
+        if(currentPtr1!=NULL){
+            currentPtr1->data=n;
+            if(headPtr1==NULL){
+                headPtr1=currentPtr1;
+
+                lastPtr1=currentPtr1;
+            }
+            else{
+                lastPtr1->nextPtr=currentPtr1;
+
+                lastPtr1=currentPtr1;
+            }
+        }
+        lastPtr1->nextPtr=NULL;
+        scanf("%d",&n);
+
+    }
+    return headPtr1;
+}
+
+
+
+
+
+void freePtr(Linklist* a){
+    Linklist* scanPtr=a;
+    while(a!=NULL){
+        a=a->nextPtr;
+        free(scanPtr);
+        scanPtr=a;
+    }
+    free(scanPtr);
+}
+Linklist* findPtr(Linklist* a,int n){
+    int i=0;
+    Linklist* currenPtr=a;
+    while(currenPtr!=NULL){
+        i=i+1;
+        if (i==n)
+            break;
+        currenPtr=currenPtr->nextPtr;
+    }
+    return currenPtr;
+
+
+}
+
+int length(Linklist*a){
+    int i=0;
+    Linklist *scanPtr=a;
+    while(scanPtr!=NULL){
+        i=i+1;
+        scanPtr=scanPtr->nextPtr;
+    }
+    return i;
+}
+
+int judgePtr(Linklist* a,Linklist* b){
+    int length1=length(a);
+    int length2=length(b);
+    int i=0;
+    if(length2>length1)
+        return 0;
+    else{
+        Linklist* scanPtr1=a;
+        Linklist* resetPtr=a;
+        Linklist* scanPtr2=b;
+        while(resetPtr!=NULL){
+            if(scanPtr1->data==scanPtr2->data){
+
+                while(scanPtr1->data==scanPtr2->data&&scanPtr2!=NULL&&scanPtr1!=NULL){
+                    i=i+1;
+                    scanPtr1=scanPtr1->nextPtr;
+                    scanPtr2=scanPtr2->nextPtr;
+
+                }
+
+                if(i==length2){
+
+                    return 1;}
+                else{
+                    scanPtr2=b;
+                    scanPtr1=resetPtr->nextPtr;
+                    resetPtr=resetPtr->nextPtr;
+                    i=0;
+                }
+            }
+            else{
+                scanPtr1=scanPtr1->nextPtr;
+                resetPtr=resetPtr->nextPtr;
+            }
+        }
+        return 0;
+    }
+}
+
+void Guibing(Linklist *listA,Linklist *listB){
+
+    Linklist *headptr = (Linklist *) malloc(sizeof(Linklist));
+    Linklist *headptr1 = (Linklist *) malloc(sizeof(Linklist));
+    headptr->nextPtr = listA;
+    headptr->data = -3;
+    headptr1->nextPtr = listB;
+    Linklist *ListA = headptr;
+    Linklist *ListB = headptr1;
+    while (ListA->nextPtr != NULL && ListB->nextPtr != NULL) {
+        if (ListA->data < ListB->nextPtr->data && ListA->nextPtr->data > ListB->nextPtr->data) {
+            Linklist *passingnode1 = ListA->nextPtr;
+            Linklist *passingnode2 = ListB->nextPtr->nextPtr;
+            ListA->nextPtr = ListB->nextPtr;
+            ListB->nextPtr->nextPtr = passingnode1;
+            ListB->nextPtr = passingnode2;
+            ListA = ListA->nextPtr;
+
+        } else if (ListA->data == ListB->nextPtr->data) {
+            ListB = ListB->nextPtr;
+        } else
+            ListA = ListA->nextPtr;
+
+    }
+    if (ListB->nextPtr!=NULL&&ListA->data == ListB->nextPtr->data) {
+        ListA->nextPtr = ListB->nextPtr->nextPtr;
+        ListB->nextPtr->nextPtr = NULL;
+    } else if(ListB->nextPtr!=NULL) {
+        ListA->nextPtr = ListB->nextPtr;
+        ListB->nextPtr = NULL;
+    }
+
+    Linklist *showptr = headptr->nextPtr;
+    Linklist *showptr2 = headptr1->nextPtr;
+    if(headptr->nextPtr==NULL)
+        printf("There is no item in A list.\n");
+    else{
+        printf("The new list A:");
+        while (showptr != NULL) {
+            printf("%d ", showptr->data);
+            showptr = showptr->nextPtr;
+        }
+        printf("\n");}
+    if(headptr1->nextPtr==NULL)
+        printf("There is no item in B list.\n");
+    else{
+        printf("The new list B:");
+
+        while (showptr2 != NULL) {
+            printf("%d ", showptr2->data);
+            showptr2 = showptr2->nextPtr;
+        }}
+}
+
+
+
+
+
+
+
+
+
+
